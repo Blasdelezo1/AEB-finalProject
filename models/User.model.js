@@ -17,6 +17,10 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    avatar: {
+      type: String,
+      default: "images/default-avatar.png"
+    },
   },
   {
     timestamps: true,
