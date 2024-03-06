@@ -22,7 +22,17 @@ const postSchema = new Schema(
         responses: [{
             type: Schema.Types.ObjectId,
             ref: 'Response'
-        }]
+        }],
+        category: {
+            type: String,
+            enum: ['early game', 'midle game', 'late game', 'opening', 'prime', 'blitz', 'cube', 'timming', 'flexibility', 'backgamme', 'bear off'],
+            required: true
+        },
+        moneyGame: {
+            type: Boolean,
+            required: true
+        }
+
     },
     {
         timestamps: true,
