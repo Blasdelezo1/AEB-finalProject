@@ -6,10 +6,10 @@ const postSchema = new Schema(
             type: String,
             required: true,
         },
-        image: {
+        imageUrl: {
             type: String,
-            required: true,
-            unique: true,
+            required: false,
+            unique: false,
         },
         description: {
             type: String,
@@ -23,11 +23,10 @@ const postSchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: 'Response'
         }],
-        category: {
+        categories: [{
             type: String,
-            enum: ['early game', 'midle game', 'late game', 'opening', 'prime', 'blitz', 'cube', 'timming', 'flexibility', 'backgamme', 'bear off'],
-            required: true
-        },
+            enum: ['early game', 'midle game', 'late game', 'opening', 'prime', 'blitz', 'cube', 'timming', 'flexibility', 'backgamme', 'bear off']
+        }],
         moneyGame: {
             type: Boolean,
             required: true
@@ -42,3 +41,4 @@ const postSchema = new Schema(
 const Post = model("Post", postSchema)
 
 module.exports = Post
+

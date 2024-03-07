@@ -6,10 +6,10 @@ const Post = require('./../models/Post.model')
 
 router.post('/', (req, res, next) => {
 
-  const { title, image, description, owner, category, moneyGame } = req.body
+  const { title, imageUrl, description, owner, categories, moneyGame } = req.body
 
   Post
-    .create({ title, image, description, owner, responses: [], category, moneyGame })
+    .create({ title, imageUrl, description, owner, responses: [], categories, moneyGame })
     .then(newPost => res.json(newPost))
     .catch(err => next(err))
 })
@@ -44,7 +44,7 @@ router.get('/:postId', (req, res, next) => {
 router.put('/:postId', (req, res, next) => {
 
   const { postId } = req.params
-  const { title, image, description, category, moneyGame } = req.body
+  const { title, image, description, categories, moneyGame } = req.body
 
   if (!mongoose.Types.ObjectId.isValid(postId)) {
     res.status(400).json({ message: 'Specified id is not valid' })
@@ -54,7 +54,7 @@ router.put('/:postId', (req, res, next) => {
   Post
     .findByIdAndUpdate(
       postId,
-      { title, image, description, category, moneyGame },
+      { title, image, description, categories, moneyGame },
       { new: true, runValidators: true }
     )
     .then(updatedPost => res.json(updatedPost))
