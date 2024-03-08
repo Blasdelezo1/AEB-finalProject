@@ -6,10 +6,8 @@ const postSchema = new Schema(
             type: String,
             required: true,
         },
-        imageUrl: {
+        cover: {
             type: String,
-            required: false,
-            unique: false,
         },
         description: {
             type: String,
