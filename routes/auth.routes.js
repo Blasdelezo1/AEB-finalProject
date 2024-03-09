@@ -11,7 +11,7 @@ const saltRounds = 10
 
 router.post('/signup', (req, res, next) => {
 
-  const { email, password, name } = req.body
+  const { email, password, name, avatar } = req.body
 
   if (email === '' || password === '' || name === '') {
     res.status(400).json({ message: "Provide email, password and name" })
@@ -41,7 +41,8 @@ router.post('/signup', (req, res, next) => {
       const salt = bcrypt.genSaltSync(saltRounds)
       const hashedPassword = bcrypt.hashSync(password, salt)
 
-      return User.create({ email, name, password: hashedPassword })
+      return User
+        .create({ avatar, email, name, password: hashedPassword })
     })
     .then(() => res.sendStatus(201))
     .catch(err => next(err))
@@ -71,8 +72,8 @@ router.post('/login', (req, res, next) => {
 
       if (passwordCorrect) {
 
-        const { name, email, _id } = foundUser
-        const payload = { name, email, _id }
+        const { name, email, _id, avatar, favorites } = foundUser
+        const payload = { name, email, _id, avatar, favorites }
 
         const authToken = jwt.sign(
           payload,
@@ -84,7 +85,7 @@ router.post('/login', (req, res, next) => {
       }
 
       else {
-        res.status(401).json({ message: "Unable to authenticate the user" });
+        res.status(401).json({ message: "Unable to authenticate the user" })
       }
     })
     .catch(err => next(err))
@@ -94,6 +95,32 @@ router.post('/login', (req, res, next) => {
 router.get('/verify', isAuthenticated, (req, res, next) => {
   res.json({ userInfo: req.payload })
 })
+
+router.post('/favorites', isAuthenticated, (req, res, next) => {
+
+  const { postId } = req.body
+  const userId = req.payload._id
+  try {
+    const user =
+      User
+        .findByIdAndUpdate(
+          userId,
+          { $addToSet: { favorites: postId } },
+          { new: true })
+
+    if (!user) {
+      return res.status(404).json({ message: "Usuario no encontrado" })
+    }
+
+    res.status(200).json({ message: "Publicación agregada a favoritos" })
+  } catch (error) {
+    console.error("Error al agregar la publicación a favoritos:", error)
+    res.status(500).json({ message: "Error interno del servidor" })
+  }
+})
+
+
+
 
 
 module.exports = router
