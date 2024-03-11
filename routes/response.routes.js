@@ -8,10 +8,13 @@ const Post = require('./../models/Post.model')
 router.post('/', (req, res, next) => {
 
     const { comment, owner, post } = req.body
+    console.log("????")
+    console.log(req.body)
 
     Response
         .create({ comment, owner, post })
         .then(newResponse => {
+            console.log({ post })
             return Post
                 .findByIdAndUpdate(
                     post,
@@ -20,6 +23,7 @@ router.post('/', (req, res, next) => {
                 )
         })
         .then(updatedPost => {
+            console.log(updatedPost)
             res.json(updatedPost)
         })
         .catch(err => next(err))

@@ -18,7 +18,7 @@ router.get('/', (req, res, next) => {
 
   Post
     .find()
-    .populate('responses')
+    .populate('responses owner')
     // .select()
     // .sort()
     .then(allPosts => res.json(allPosts))
@@ -73,6 +73,29 @@ router.delete('/:postId', (req, res, next) => {
   Post
     .findByIdAndDelete(postId)
     .then(() => res.sendStatus(204))
+    .catch(err => next(err))
+})
+
+router.get('/:postId/responses', (req, res, next) => {
+
+  const { postId } = req.params
+
+  if (!mongoose.Types.ObjectId.isValid(postId)) {
+    res.status(400).json({ message: 'Specified id is not valid' })
+    return
+  }
+
+  Post
+    .findById(postId)
+    .populate('responses')
+    .select('responses')
+    .then(post => {
+      if (!post) {
+        res.status(404).json({ message: 'Post not found' })
+        return
+      }
+      res.json(post)
+    })
     .catch(err => next(err))
 })
 
