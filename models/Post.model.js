@@ -23,7 +23,7 @@ const postSchema = new Schema(
         }],
         categories: [{
             type: String,
-            enum: ['early game', 'midle game', 'late game', 'opening', 'prime', 'blitz', 'cube', 'timming', 'flexibility', 'backgamme', 'bear off']
+            enum: ['Early Game', 'Midle Game', 'Late Game', 'Opening', 'Prime', 'Blitz', 'Cube', 'Timming', 'Flexibility', 'Backgamme', 'Bear Off']
         }],
         moneyGame: {
             type: Boolean,

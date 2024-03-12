@@ -3,7 +3,6 @@ const router = express.Router()
 const mongoose = require('mongoose')
 const Post = require('./../models/Post.model')
 
-
 router.post('/', (req, res, next) => {
 
   const { title, cover, description, owner, categories, moneyGame } = req.body
@@ -19,8 +18,7 @@ router.get('/', (req, res, next) => {
   Post
     .find()
     .populate('responses owner')
-    // .select()
-    // .sort()
+    .sort({ createdAt: -1 })
     .then(allPosts => res.json(allPosts))
     .catch(err => next(err))
 })
@@ -36,7 +34,7 @@ router.get('/:postId', (req, res, next) => {
 
   Post
     .findById(postId)
-    .populate('responses')
+    .populate('responses owner')
     .then(postInfo => res.json(postInfo))
     .catch(err => next(err))
 })
@@ -76,27 +74,5 @@ router.delete('/:postId', (req, res, next) => {
     .catch(err => next(err))
 })
 
-router.get('/:postId/responses', (req, res, next) => {
-
-  const { postId } = req.params
-
-  if (!mongoose.Types.ObjectId.isValid(postId)) {
-    res.status(400).json({ message: 'Specified id is not valid' })
-    return
-  }
-
-  Post
-    .findById(postId)
-    .populate('responses')
-    .select('responses')
-    .then(post => {
-      if (!post) {
-        res.status(404).json({ message: 'Post not found' })
-        return
-      }
-      res.json(post)
-    })
-    .catch(err => next(err))
-})
 
 module.exports = router

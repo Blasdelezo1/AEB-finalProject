@@ -8,8 +8,6 @@ const Post = require('./../models/Post.model')
 router.post('/', (req, res, next) => {
 
     const { comment, owner, post } = req.body
-    console.log("????")
-    console.log(req.body)
 
     Response
         .create({ comment, owner, post })
@@ -34,6 +32,23 @@ router.get('/', (req, res, next) => {
     Response
         .find()
         .then(allComents => res.json(allComents))
+        .catch(err => next(err))
+})
+
+router.get('/post/:postId', (req, res, next) => {
+
+    const { postId } = req.params
+
+    if (!mongoose.Types.ObjectId.isValid(postId)) {
+        res.status(400).json({ message: 'Specified id is not valid' })
+        return
+    }
+
+    Response
+        .find({ post: postId })
+        .populate('owner')
+        .sort({ createdAt: -1 })
+        .then(responses => res.json(responses))
         .catch(err => next(err))
 })
 
