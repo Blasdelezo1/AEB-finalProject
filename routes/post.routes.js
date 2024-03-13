@@ -2,6 +2,7 @@ const express = require("express")
 const router = express.Router()
 const mongoose = require('mongoose')
 const Post = require('./../models/Post.model')
+const User = require('./../models/User.model')
 
 router.post('/', (req, res, next) => {
 
@@ -39,6 +40,45 @@ router.get('/:postId', (req, res, next) => {
     .catch(err => next(err))
 })
 
+router.put('/add-fav', (req, res, next) => {
+
+  const { postId, userId } = req.body
+
+  if (!mongoose.Types.ObjectId.isValid(postId)) {
+    res.status(400).json({ message: 'Specified id is not valid' })
+    return
+  }
+
+  User
+    .findByIdAndUpdate(
+      userId,
+      { $addToSet: { favorites: postId } },
+      { new: true, runValidators: true }
+    )
+    .then(updatedUser => res.json(updatedUser))
+    .catch(err => next(err))
+})
+
+router.put('/remove-fav', (req, res, next) => {
+
+  const { postId, userId } = req.body
+
+  if (!mongoose.Types.ObjectId.isValid(postId)) {
+    res.status(400).json({ message: 'Specified id is not valid' })
+    return
+  }
+
+  User
+    .findByIdAndUpdate(
+      userId,
+      { $pull: { favorites: postId } },
+      { new: true, runValidators: true }
+    )
+    .then(updatedUser => res.json(updatedUser))
+    .catch(err => next(err))
+
+})
+
 router.put('/:postId', (req, res, next) => {
 
   const { postId } = req.params
@@ -59,6 +99,9 @@ router.put('/:postId', (req, res, next) => {
     .catch(err => next(err))
 })
 
+
+
+
 router.delete('/:postId', (req, res, next) => {
 
   const { postId } = req.params
@@ -73,6 +116,8 @@ router.delete('/:postId', (req, res, next) => {
     .then(() => res.sendStatus(204))
     .catch(err => next(err))
 })
+
+
 
 
 module.exports = router

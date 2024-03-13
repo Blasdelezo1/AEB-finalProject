@@ -64,7 +64,7 @@ router.post('/login', (req, res, next) => {
     .then((foundUser) => {
 
       if (!foundUser) {
-        res.status(401).json({ message: "User not found." })
+        res.status(401).json({ message: "usuario no registrado" })
         return
       }
 
@@ -72,8 +72,8 @@ router.post('/login', (req, res, next) => {
 
       if (passwordCorrect) {
 
-        const { name, email, _id, avatar, favorites } = foundUser
-        const payload = { name, email, _id, avatar, favorites }
+        const { name, email, _id, avatar } = foundUser
+        const payload = { name, email, _id, avatar }
 
         const authToken = jwt.sign(
           payload,
@@ -95,31 +95,6 @@ router.post('/login', (req, res, next) => {
 router.get('/verify', isAuthenticated, (req, res, next) => {
   res.json({ userInfo: req.payload })
 })
-
-router.post('/favorites', isAuthenticated, (req, res, next) => {
-
-  const { postId } = req.body
-  const userId = req.payload._id
-  try {
-    const user =
-      User
-        .findByIdAndUpdate(
-          userId,
-          { $addToSet: { favorites: postId } },
-          { new: true })
-
-    if (!user) {
-      return res.status(404).json({ message: "Usuario no encontrado" })
-    }
-
-    res.status(200).json({ message: "Publicación agregada a favoritos" })
-  } catch (error) {
-    console.error("Error al agregar la publicación a favoritos:", error)
-    res.status(500).json({ message: "Error interno del servidor" })
-  }
-})
-
-
 
 
 
