@@ -40,6 +40,8 @@ router.get('/:postId', (req, res, next) => {
     .catch(err => next(err))
 })
 
+
+
 router.put('/add-fav', (req, res, next) => {
 
   const { postId, userId } = req.body

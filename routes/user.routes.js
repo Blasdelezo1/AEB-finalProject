@@ -25,4 +25,17 @@ router.get('/:userId/favs', (req, res, next) => {
 })
 
 
+router.get('/:userId/all-favs', (req, res, next) => {
+
+  const { userId } = req.params
+
+  User
+    .findById(userId)
+    .populate('favorites')
+    .select('favorites')
+    .then((allFavs) => res.json(allFavs))
+    .catch(err => next(err))
+})
+
+
 module.exports = router
