@@ -100,7 +100,7 @@ router.get('/verify', isAuthenticated, (req, res, next) => {
 
 module.exports = router
 
-
+//in case we develop the actual website we could use this REGEX fro stroger password...
 // const passwordRegex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/
 // if (!passwordRegex.test(password)) {
 //   res

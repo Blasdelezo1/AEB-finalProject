@@ -40,8 +40,6 @@ router.get('/:postId', (req, res, next) => {
     .catch(err => next(err))
 })
 
-
-
 router.put('/add-fav', (req, res, next) => {
 
   const { postId, userId } = req.body
@@ -100,9 +98,6 @@ router.put('/:postId', (req, res, next) => {
     .then(updatedPost => res.json(updatedPost))
     .catch(err => next(err))
 })
-
-
-
 
 router.delete('/:postId', (req, res, next) => {
 
